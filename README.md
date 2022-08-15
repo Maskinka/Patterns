@@ -1,0 +1,1 @@
+[![Build status](https://ci.appveyor.com/api/projects/status/eu75fns5va47qicw?svg=true)](https://ci.appveyor.com/project/Maskinka/patterns)
