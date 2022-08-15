@@ -27,7 +27,7 @@ class DeliveryTest {
         var daysToAddForSecondMeeting = 7;
         var secondMeetingDate = DataGenerator.generateDate(daysToAddForSecondMeeting);
 
-        Configuration.holdBrowserOpen = true;
+        //Configuration.holdBrowserOpen = true;
         $("[placeholder=\"Город\"]").setValue(validUser.getCity());
         $x("//input[@placeholder='Дата встречи']").sendKeys(Keys.chord(Keys.SHIFT, Keys.HOME), Keys.BACK_SPACE);
         $x("//input[@placeholder='Дата встречи']").setValue(firstMeetingDate);
