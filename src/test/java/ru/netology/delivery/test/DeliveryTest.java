@@ -9,13 +9,14 @@ import org.openqa.selenium.Keys;
 import ru.netology.delivery.data.DataGenerator;
 
 import java.time.Duration;
+
 import static com.codeborne.selenide.Selenide.*;
 
 class DeliveryTest {
 
     @BeforeEach
     void setup() {
-        open("http://localhost:9999/");
+        Configuration.holdBrowserOpen = true;
     }
 
     @Test
@@ -26,10 +27,9 @@ class DeliveryTest {
         var firstMeetingDate = DataGenerator.generateDate(daysToAddForFirstMeeting);
         var daysToAddForSecondMeeting = 7;
         var secondMeetingDate = DataGenerator.generateDate(daysToAddForSecondMeeting);
-
-        //Configuration.holdBrowserOpen = true;
-        $("[placeholder=\"Город\"]").setValue(validUser.getCity());
-        $x("//input[@placeholder='Дата встречи']").sendKeys(Keys.chord(Keys.SHIFT, Keys.HOME), Keys.BACK_SPACE);
+        open("http://localhost:9999/");
+        $("[data-test-id='city'] input").setValue(validUser.getCity());
+        $x("//input[@placeholder='Дата встречи']").sendKeys(Keys.chord(Keys.SHIFT, Keys.HOME, Keys.BACK_SPACE));
         $x("//input[@placeholder='Дата встречи']").setValue(firstMeetingDate);
         $x("//input[@name='name']").setValue(validUser.getName());
         $x("//input[@name='phone']").setValue(validUser.getPhone());
@@ -39,12 +39,13 @@ class DeliveryTest {
         $("[class='notification__content']").shouldHave(Condition.exactText("Встреча успешно запланирована на "
                 + firstMeetingDate));
         $x("//input[@placeholder='Дата встречи']").sendKeys(Keys.chord(Keys.SHIFT, Keys.HOME), Keys.BACK_SPACE);
-        $x("//span[@class='button__text']").click();
-        $x("//button[contains(@class,'button')]").click();
         $x("//input[@placeholder='Дата встречи']").setValue(secondMeetingDate);
         $x("//span[@class='button__text']").click();
-        $x("//*[contains(text(),'Успешно!')]").shouldBe(Condition.visible, Duration.ofSeconds(15));
-        $("[class='notification__content']").shouldHave(Condition.exactText("Встреча успешно запланирована на "
+        $x("//*[contains(text(),'У вас уже запланирована встреча на другую дату. " +
+                "Перепланировать?')]").shouldBe(Condition.visible);
+        $x("//button[@type='button']/span[.='Перепланировать']").click();
+        $("[data-test-id='success-notification']").shouldHave(Condition.exactText("Успешно! Встреча успешно запланирована на "
                 + secondMeetingDate));
+
     }
 }
